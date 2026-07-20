@@ -1,0 +1,22 @@
+﻿# ── Git ignore for 0-bootstrap ──
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform.lock.hcl
+
+# Secrets
+terraform.tfvars
+*.auto.tfvars
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Credentials
+*.json
+!terraform.tfvars.example
