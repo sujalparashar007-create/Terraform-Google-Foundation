@@ -121,6 +121,20 @@ resource "google_organization_iam_member" "service_usage_admin" {
   member = "serviceAccount:${google_service_account.terraform_sa.email}"
 }
 
+# Allows creating/managing hierarchical firewall policies (org-level)
+resource "google_organization_iam_member" "firewall_policy_admin" {
+  org_id = var.org_id
+  role   = "roles/compute.orgFirewallPolicyAdmin"
+  member = "serviceAccount:${google_service_account.terraform_sa.email}"
+}
+
+# Allows attaching firewall policies to the organization
+resource "google_organization_iam_member" "org_security_resource_admin" {
+  org_id = var.org_id
+  role   = "roles/compute.orgSecurityResourceAdmin"
+  member = "serviceAccount:${google_service_account.terraform_sa.email}"
+}
+
 # --- Billing account level ---
 # Allows linking created projects to the billing account
 resource "google_billing_account_iam_member" "billing_user" {
