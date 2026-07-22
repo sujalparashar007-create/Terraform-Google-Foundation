@@ -2,11 +2,9 @@
 # 2-FOLDERS — Organization Folder Hierarchy
 # ==============================================================================
 # Creates:
-#   1. Four top-level folders under the organization:
+#   1. Two top-level folders under the organization:
 #      - fldr-network        (shared VPC host projects)
 #      - fldr-development    (dev/test sandbox projects)
-#      - fldr-nonproduction  (staging/UAT projects)
-#      - fldr-production     (prod projects)
 #   2. Folder-level IAM bindings (parameterized)
 #
 # Consumes from 0-bootstrap remote state:
@@ -30,12 +28,10 @@ data "terraform_remote_state" "bootstrap" {
 locals {
   terraform_sa_email = data.terraform_remote_state.bootstrap.outputs.terraform_sa_email
 
-  # The four foundation folders
+  # The two foundation folders (scaled down for billing quota)
   folder_names = toset([
     "fldr-network",
     "fldr-development",
-    "fldr-nonproduction",
-    "fldr-production",
   ])
 }
 

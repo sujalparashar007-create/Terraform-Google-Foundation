@@ -23,9 +23,10 @@
 # 1. FOLDERS
 # ------------------------------------------------------------------------------
 resource "google_folder" "folders" {
-  for_each     = var.names
-  display_name = each.value
-  parent       = var.parent
+  for_each            = var.names
+  display_name        = each.value
+  parent              = var.parent
+  deletion_protection = false
 }
 
 # ------------------------------------------------------------------------------
