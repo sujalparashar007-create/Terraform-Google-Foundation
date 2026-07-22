@@ -16,3 +16,9 @@ module "spoke" {
   pod_cidr      = each.value.pod_cidr
   svc_cidr      = each.value.svc_cidr
 }
+
+# Enable Shared VPC host on spoke host projects
+resource "google_compute_shared_vpc_host_project" "spoke" {
+  for_each = var.environments
+  project  = local.project_ids[each.key]
+}

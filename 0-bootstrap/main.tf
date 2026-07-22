@@ -135,6 +135,13 @@ resource "google_organization_iam_member" "org_security_resource_admin" {
   member = "serviceAccount:${google_service_account.terraform_sa.email}"
 }
 
+# Allows enabling Shared VPC host on projects (needed by Stage 4+)
+resource "google_organization_iam_member" "xpn_admin" {
+  org_id = var.org_id
+  role   = "roles/compute.xpnAdmin"
+  member = "serviceAccount:${google_service_account.terraform_sa.email}"
+}
+
 # --- Billing account level ---
 # Allows linking created projects to the billing account
 resource "google_billing_account_iam_member" "billing_user" {
