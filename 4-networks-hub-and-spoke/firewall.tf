@@ -27,6 +27,14 @@ module "firewall_hub" {
       source_ranges = ["35.191.0.0/16", "130.211.0.0/22"]
       allow         = [{ protocol = "tcp", ports = ["80", "443"] }]
     }
+    allow_spoke_ingress = {
+      name          = "allow-spoke-ingress"
+      description   = "Allow all traffic from spoke VPCs"
+      direction     = "INGRESS"
+      priority      = 1000
+      source_ranges = ["10.16.0.0/16"]
+      allow         = [{ protocol = "tcp" }, { protocol = "udp" }, { protocol = "icmp" }]
+    }
   }
 }
 
