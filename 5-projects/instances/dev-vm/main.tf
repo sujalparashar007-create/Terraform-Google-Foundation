@@ -87,3 +87,34 @@ resource "google_compute_instance" "vm" {
 
   depends_on = [module.service_project]
 }
+
+# ------------------------------------------------------------------------------
+# IAM — Grant SSH access via IAP + OS Login to human operators
+# ------------------------------------------------------------------------------
+variable "vm_operators" {
+  description = "List of users who can SSH into the VM via IAP"
+  type        = list(string)
+  default     = ["sujalparashar007@gmail.com"]
+}
+
+resource "google_project_iam_member" "iap_tunnel" {
+  for_each = toset(var.vm_operators)
+  project  = module.service_project.project_id
+  role     = "roles/iap.tunnelResourceAccessor"
+  member   = "user:${each.key}"
+}
+
+resource "google_project_iam_member" "os_login" {
+  for_each = toset(var.vm_operators)
+  project  = module.service_project.project_id
+  role     = "roles/compute.osLogin"
+  member   = "user:${each.key}"
+}
+
+resource "google_project_iam_member" "compute_instance_user" {
+  for_each = toset(var.vm_operators)
+  project  = module.service_project.project_id
+  role     = "roles/compute.instanceAdmin.v1"
+  member   = "user:${each.key}"
+}
+
