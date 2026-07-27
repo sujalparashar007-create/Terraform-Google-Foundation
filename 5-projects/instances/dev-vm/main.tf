@@ -53,7 +53,7 @@ module "service_project" {
   folder_id            = local.dev_folder_id
   host_project_id      = local.dev_host_project
   service_project_name = "prj-dev-svc-vm"
-  service_project_id   = "${var.project_prefix}-dev-svc-vm"
+  service_project_id   = "${var.project_prefix}-dev-svc-vm-01"
   subnet_self_link     = local.dev_subnet
   region               = var.region
 }

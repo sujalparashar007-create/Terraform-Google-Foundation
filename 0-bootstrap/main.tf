@@ -97,6 +97,13 @@ resource "google_organization_iam_member" "org_viewer" {
   member = "serviceAccount:${google_service_account.terraform_sa.email}"
 }
 
+# Allows reading/viewing ALL projects in the org (needed for terraform import)
+resource "google_organization_iam_member" "browser" {
+  org_id = var.org_id
+  role   = "roles/browser"
+  member = "serviceAccount:${google_service_account.terraform_sa.email}"
+}
+
 # Allows granting IAM roles on projects the SA creates (Owner-like)
 
 

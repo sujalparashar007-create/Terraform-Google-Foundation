@@ -54,12 +54,12 @@ locals {
   host_projects = {
     hub = {
       name       = "prj-hub-host"
-      project_id = "${var.project_prefix}-hub-host"
+      project_id = "${var.project_prefix}-hub-host-01"
       folder_key = "fldr-network"
     }
     dev = {
       name       = "prj-dev-host"
-      project_id = "${var.project_prefix}-dev-host"
+      project_id = "${var.project_prefix}-dev-host-01"
       folder_key = "fldr-development"
     }
   }
