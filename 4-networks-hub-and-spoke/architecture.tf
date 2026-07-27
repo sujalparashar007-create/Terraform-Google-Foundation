@@ -13,8 +13,8 @@ data "terraform_remote_state" "host_projects" {
   }
 }
 locals {
-  terraform_sa_email = data.terraform_remote_state.bootstrap.outputs.terraform_sa_email
-  project_ids        = data.terraform_remote_state.host_projects.outputs.project_ids
+  terraform_sa_email         = data.terraform_remote_state.bootstrap.outputs.terraform_sa_email
+  project_ids                = data.terraform_remote_state.host_projects.outputs.project_ids
   use_peering                = var.connectivity_model == "peering"
   use_ncc                    = var.connectivity_model == "ncc"
   use_distributed_nat        = var.egress_model == "distributed_nat"

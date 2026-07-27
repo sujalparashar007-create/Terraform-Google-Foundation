@@ -13,5 +13,36 @@ module "peering" {
   import_custom_routes = true
 }
 
-# NCC path (placeholder)
-# module "ncc" { count = local.use_ncc ? 1 : 0; source = "../modules/ncc"; ... }
+# ==============================================================================
+# NCC -- Network Connectivity Center hub-and-spoke
+# ==============================================================================
+# Deploy when connectivity_model == "ncc". Creates a central NCC hub and
+# attaches all VPCs (hub + spokes) as NCC spokes for full-mesh connectivity.
+# Each spoke must reside in its VPC's own project (GCP NCC requirement).
+# ==============================================================================
+module "ncc" {
+  count  = local.use_ncc ? 1 : 0
+  source = "../modules/ncc"
+
+  hub_project_id = local.project_ids["hub"]
+  hub_name       = "ncc-hub"
+  region         = var.region
+  vpc_spokes = merge(
+    {
+      hub = {
+        project_id    = local.project_ids["hub"]
+        vpc_self_link = module.hub.vpc_self_link
+      }
+    },
+    {
+      for k, v in module.spoke : k => {
+        project_id    = local.project_ids[k]
+        vpc_self_link = v.vpc_self_link
+      }
+    }
+  )
+  labels = {
+    environment = "shared"
+    managed_by  = "terraform"
+  }
+}

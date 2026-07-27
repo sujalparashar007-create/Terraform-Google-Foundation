@@ -22,3 +22,19 @@ output "egress_model" {
   description = "Chosen egress model"
   value       = var.egress_model
 }
+
+# ==============================================================================
+# NCC outputs (populated only when connectivity_model == "ncc")
+# ==============================================================================
+output "ncc_hub_id" {
+  description = "NCC hub resource ID (null when using peering)"
+  value       = try(module.ncc[0].hub_id, null)
+}
+output "ncc_hub_name" {
+  description = "NCC hub resource name (null when using peering)"
+  value       = try(module.ncc[0].hub_name, null)
+}
+output "ncc_spoke_names" {
+  description = "Map of spoke names attached to NCC hub (null when using peering)"
+  value       = try(module.ncc[0].spoke_names, null)
+}
