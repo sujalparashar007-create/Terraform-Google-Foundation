@@ -38,6 +38,29 @@ resource "google_project_iam_member" "tf_sa_monitoring_editor" {
   member  = "serviceAccount:tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
 }
 
+resource "google_project_iam_member" "tf_sa_storage_admin" {
+  project = "foundation-bootstrap-seed"
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "tf_sa_cloudfunctions_admin" {
+  project = "foundation-bootstrap-seed"
+  role    = "roles/cloudfunctions.admin"
+  member  = "serviceAccount:tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
+}
+resource "google_service_account_iam_member" "tf_sa_act_as" {
+  service_account_id = "projects/foundation-bootstrap-seed/serviceAccounts/tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
+}
+
+resource "google_service_account_iam_member" "compute_sa_act_as" {
+  service_account_id = "projects/foundation-bootstrap-seed/serviceAccounts/128258208668-compute@developer.gserviceaccount.com"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
+}
+
 # NOTE: This requires the TF SA to already have billing.admin (manual bootstrapping).
 # Once granted manually, Terraform can manage it going forward.
 resource "google_billing_account_iam_member" "tf_sa_billing_admin" {
@@ -263,5 +286,111 @@ resource "google_bigquery_table" "monthly_kpi_summary" {
   depends_on = [
     module.finops_views,
     module.finops_budgets
+  ]
+}
+
+# ==============================================================================
+# STEP 9: Cloud Function - Budget Alert Processor
+# ==============================================================================
+# Triggered by Pub/Sub finops-budget-alerts topic. Logs budget alert messages.
+# ==============================================================================
+
+# Additional APIs needed for Cloud Functions 2nd gen
+resource "google_project_service" "cloudbuild" {
+  project = "foundation-bootstrap-seed"
+  service = "cloudbuild.googleapis.com"
+}
+
+resource "google_project_service" "cloudfunctions" {
+  project = "foundation-bootstrap-seed"
+  service = "cloudfunctions.googleapis.com"
+}
+
+resource "google_project_service" "cloudrun" {
+  project = "foundation-bootstrap-seed"
+  service = "run.googleapis.com"
+}
+
+resource "google_project_service" "eventarc" {
+  project = "foundation-bootstrap-seed"
+  service = "eventarc.googleapis.com"
+}
+
+resource "google_project_service" "artifactregistry" {
+  project = "foundation-bootstrap-seed"
+  service = "artifactregistry.googleapis.com"
+}
+
+# GCS bucket to store the Cloud Function source code
+resource "google_storage_bucket" "function_source_bucket" {
+  depends_on = [google_project_iam_member.tf_sa_storage_admin]
+  name       = "foundation-finops-function-source"
+  location   = "us-east1"
+  project    = "foundation-bootstrap-seed"
+
+  uniform_bucket_level_access = true
+  force_destroy               = true
+}
+
+# Zip the function source code
+data "archive_file" "function_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/function-source"
+  output_path = "${path.module}/function-source.zip"
+}
+
+# Upload the zip to GCS
+resource "google_storage_bucket_object" "function_zip" {
+  name   = "function-${data.archive_file.function_zip.output_sha256}.zip"
+  bucket = google_storage_bucket.function_source_bucket.name
+  source = data.archive_file.function_zip.output_path
+}
+
+# Cloud Function 2nd gen - triggered by Pub/Sub budget alerts
+resource "google_cloudfunctions2_function" "budget_alert_processor" {
+  name        = "finops-budget-alert-processor"
+  location    = "us-east1"
+  project     = "foundation-bootstrap-seed"
+  description = "Processes budget alert messages from Pub/Sub and logs them to Cloud Logging"
+
+  build_config {
+    runtime     = "python311"
+    entry_point = "process_budget_alert"
+
+    source {
+      storage_source {
+        bucket = google_storage_bucket.function_source_bucket.name
+        object = google_storage_bucket_object.function_zip.name
+      }
+    }
+  }
+
+  service_config {
+    max_instance_count    = 1
+    available_memory      = "256M"
+    timeout_seconds       = 60
+    service_account_email = "tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
+
+    environment_variables = {
+      GMAIL_USER         = "sujalparashar007@gmail.com"
+      GMAIL_APP_PASSWORD = "mpdh pdnt ickl ygll"
+      TEAMS_WEBHOOK_URL  = "https://default9274ee3f94254109a27f9fb15c1067.5d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f65710364b934191846154e8e6917df8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ogSLKC28GyxDPcRGhXM77bd9jbtffvcIE0Op5Wd28zQ"
+    }
+  }
+
+  event_trigger {
+    trigger_region = "us-east1"
+    event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
+    pubsub_topic   = module.finops_alerts.pubsub_topic_id
+    retry_policy   = "RETRY_POLICY_DO_NOT_RETRY"
+  }
+
+  depends_on = [
+    google_project_service.cloudfunctions,
+    google_project_service.cloudrun,
+    google_project_service.eventarc,
+    google_project_service.artifactregistry,
+    google_storage_bucket_object.function_zip,
+    module.finops_alerts
   ]
 }
