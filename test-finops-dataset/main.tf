@@ -15,6 +15,13 @@
 #   Role: Billing Account Administrator
 # ==============================================================================
 
+# ------------------------------------------------------------------------------
+# TOGGLE: Set to false to stop all email & Teams budget alerts
+# ------------------------------------------------------------------------------
+locals {
+  enable_alert_function = true
+}
+
 # ==============================================================================
 # STEP 1: Permissions for Terraform Service Account
 # Applied FIRST so downstream modules have the roles they need.
@@ -347,7 +354,9 @@ resource "google_storage_bucket_object" "function_zip" {
 }
 
 # Cloud Function 2nd gen - triggered by Pub/Sub budget alerts
+# Set enable_alert_function = false to stop emails & Teams messages
 resource "google_cloudfunctions2_function" "budget_alert_processor" {
+  count = local.enable_alert_function ? 1 : 0
   name        = "finops-budget-alert-processor"
   location    = "us-east1"
   project     = "foundation-bootstrap-seed"

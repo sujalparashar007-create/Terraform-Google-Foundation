@@ -44,7 +44,6 @@ def send_teams(budget_name, threshold, cost, budget, currency):
             ]},
         ]
     }
-    print(f"Teams adaptive card: {json.dumps(card)}")
     try:
         req = urllib.request.Request(TEAMS_WEBHOOK, data=json.dumps(card).encode(),
                                      headers={"Content-Type": "application/json"})
@@ -67,7 +66,14 @@ def process_budget_alert(cloud_event):
     bu = message_data.get("budgetAmount", "N/A")
     cu = message_data.get("currencyCode", "N/A")
 
-    print(f"Budget Alert: {bn} | Spend: {co}/{bu} {cu} | Threshold: {th}")
+    print(f"Budget message: {bn} | Spend: {co}/{bu} {cu} | Threshold: {th}")
+
+    # Only send notifications when a threshold is actually breached.
+    # Budget update/creation events have alertThresholdExceeded = null/missing.
+    if th is None or th == "N/A" or th == 0 or th == 0.0:
+        print(f"Skipping notification - no threshold breach")
+        return "OK"
+
     send_email(f"FinOps Alert: {bn} - {co} {cu}",
                f"Budget: {bn}\nSpend: {co}/{bu} {cu}\nThreshold: {th}\n\nhttps://console.cloud.google.com/billing")
     send_teams(bn, th, co, bu, cu)
