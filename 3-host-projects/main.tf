@@ -48,6 +48,7 @@ locals {
   default_host_apis = [
     "compute.googleapis.com",
     "dns.googleapis.com",
+    "iap.googleapis.com",
   ]
 
   # Host project definitions — single source of truth

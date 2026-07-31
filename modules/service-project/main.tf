@@ -7,7 +7,7 @@
 # ==============================================================================
 
 locals {
-  default_apis = ["compute.googleapis.com"]
+  default_apis = ["compute.googleapis.com", "iap.googleapis.com"]
   all_apis     = distinct(concat(local.default_apis, var.activate_apis))
 }
 

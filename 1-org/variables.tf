@@ -79,13 +79,6 @@ variable "backup_range" {
 locals {
   firewall_rules = [
     {
-      priority    = 100
-      action      = "deny"
-      src_range   = "0.0.0.0/0"
-      ports       = ["22", "3389"]
-      description = "Deny public admin ports (SSH/RDP) from internet"
-    },
-    {
       priority    = 200
       action      = "allow"
       src_range   = var.corp_ssh_range
