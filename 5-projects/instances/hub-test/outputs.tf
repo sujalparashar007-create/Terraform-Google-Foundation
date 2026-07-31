@@ -1,4 +1,4 @@
-﻿output "vm_name" {
+output "vm_name" {
   description = "Name of the hub test VM"
   value       = google_compute_instance.vm.name
 }

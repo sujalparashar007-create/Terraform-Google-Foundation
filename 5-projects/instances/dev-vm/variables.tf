@@ -25,3 +25,10 @@ variable "zone" {
   type        = string
   default     = "us-east1-b"
 }
+
+variable "vm_operators" {
+  description = "List of users who can SSH into the VM via IAP"
+  type        = list(string)
+  default     = ["sujalparashar007@gmail.com"]
+}
+

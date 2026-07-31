@@ -10,11 +10,11 @@ resource "google_compute_network" "hub" {
 }
 
 resource "google_compute_subnetwork" "hub" {
-  project       = var.project_id
-  name          = var.subnet_name
-  region        = var.region
-  network       = google_compute_network.hub.self_link
-  ip_cidr_range = var.subnet_cidr
+  project                  = var.project_id
+  name                     = var.subnet_name
+  region                   = var.region
+  network                  = google_compute_network.hub.self_link
+  ip_cidr_range            = var.subnet_cidr
   private_ip_google_access = true
 }
 
