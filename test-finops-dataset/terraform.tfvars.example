@@ -1,0 +1,50 @@
+# ==============================================================================
+# EXAMPLE terraform.tfvars for test-finops-dataset
+# ==============================================================================
+# Copy to terraform.tfvars and replace placeholders with real values.
+# terraform.tfvars is gitignored -- never commit real credentials.
+# ==============================================================================
+
+# --- REQUIRED ---
+project_id               = "your-project-id"
+billing_account_id       = "XXXXXX-XXXXXX-XXXXXX"
+billing_export_table_id  = "your-project.billing_export.gcp_billing_export_resource_v1_XXXXXX"
+
+# --- OPTIONAL (defaults shown) ---
+region                   = "us-east1"
+dataset_location         = "EU"
+dataset_id               = "billing_export"
+topic_name               = "finops-budget-alerts"
+enable_alert_function    = true
+function_bucket_name     = "finops-function-source"
+function_runtime         = "python311"
+
+labels = {
+  environment = "demo"
+  managed_by  = "terraform"
+}
+
+# --- IAM / ALERTING ---
+alert_emails = [
+  "your-email@example.com",
+]
+
+iam_viewers = [
+  "user:your-email@example.com",
+]
+
+dataset_iam = {
+  "roles/bigquery.dataViewer" = [
+    "user:your-email@example.com",
+  ]
+}
+
+# --- SENSITIVE (set via .tfvars or TF_VAR_ env vars) ---
+# gmail_user            = ""
+# gmail_app_password    = ""
+# teams_webhook_url     = ""
+
+# --- BUDGET CONFIGURATION ---
+# Budget values are stored in budgets.yaml. Edit that file to change
+# budget amounts, thresholds, or scopes.
+# budgets_yaml_path      = "budgets.yaml"  # default, override if needed

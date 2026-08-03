@@ -1,10 +1,15 @@
 # ==============================================================================
-# MODULE: finops-budget-controls — variables
+# MODULE: finops-budget-controls - variables
 # ==============================================================================
 
 variable "billing_account" {
   description = "GCP billing account ID"
   type        = string
+
+  validation {
+    condition     = can(regex("^[A-F0-9]{6}-[A-F0-9]{6}-[A-F0-9]{6}$", var.billing_account))
+    error_message = "billing_account must match pattern XXXXXX-XXXXXX-XXXXXX."
+  }
 }
 
 variable "pubsub_topic_id" {
@@ -44,4 +49,9 @@ variable "iam_viewers" {
   description = "List of members to grant billing viewer (can see budgets)"
   type        = list(string)
   default     = []
+
+  validation {
+    condition     = alltrue([for m in var.iam_viewers : can(regex("^(user|group|serviceAccount|domain):.+", m))])
+    error_message = "Each iam_viewers member must be prefixed with user:, group:, serviceAccount:, or domain:."
+  }
 }

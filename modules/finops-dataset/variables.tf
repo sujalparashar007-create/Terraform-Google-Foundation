@@ -1,10 +1,15 @@
 # ==============================================================================
-# MODULE: finops-dataset — variables
+# MODULE: finops-dataset - variables
 # ==============================================================================
 
 variable "project_id" {
   description = "GCP project ID where the BigQuery dataset will be created"
   type        = string
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]{4,28}[a-z0-9]$", var.project_id))
+    error_message = "project_id must be a valid GCP project ID (6-30 chars, lowercase letters, digits, hyphens)."
+  }
 }
 
 variable "dataset_id" {
@@ -17,6 +22,11 @@ variable "location" {
   description = "BigQuery dataset location (regional or multi-regional)"
   type        = string
   default     = "EU"
+
+  validation {
+    condition     = can(regex("^[a-zA-Z]+(-[a-zA-Z]+[0-9]*)*$", var.location))
+    error_message = "location must be a valid GCP region or multi-region (e.g. EU, us-central1)."
+  }
 }
 
 variable "labels" {

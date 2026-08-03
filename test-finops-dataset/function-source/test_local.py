@@ -1,13 +1,22 @@
-import json
+﻿import json
 import os
 import smtplib
 import urllib.request
 import urllib.error
 from email.mime.text import MIMEText
 
-os.environ["GMAIL_USER"] = "sujalparashar007@gmail.com"
-os.environ["GMAIL_APP_PASSWORD"] = "mpdh pdnt ickl ygll"
-os.environ["TEAMS_WEBHOOK_URL"] = "https://default9274ee3f94254109a27f9fb15c1067.5d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f65710364b934191846154e8e6917df8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ogSLKC28GyxDPcRGhXM77bd9jbtffvcIE0Op5Wd28zQ"
+# ==============================================================================
+# LOCAL TEST HARNESS for budget alert processor
+# ==============================================================================
+# Usage: Set environment variables before running this script.
+#   PowerShell:
+#     $env:GMAIL_USER = "your-email@gmail.com"
+#     $env:GMAIL_APP_PASSWORD = "your-app-password"
+#     $env:TEAMS_WEBHOOK_URL = "https://..."
+#     python test_local.py
+#
+# NEVER commit real credentials to this file.
+# ==============================================================================
 
 print("=== TESTING TEAMS WEBHOOK ===")
 payload = {

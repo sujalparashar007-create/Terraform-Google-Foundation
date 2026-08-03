@@ -1,6 +1,6 @@
 provider "google" {
-  project                     = "foundation-bootstrap-seed"
-  billing_project             = "foundation-bootstrap-seed"
-  region                      = "us-east1"
-  impersonate_service_account = "tf-executor@foundation-bootstrap-seed.iam.gserviceaccount.com"
+  project                     = var.project_id
+  billing_project             = var.project_id
+  region                      = var.region
+  impersonate_service_account = "tf-executor@${var.project_id}.iam.gserviceaccount.com"
 }

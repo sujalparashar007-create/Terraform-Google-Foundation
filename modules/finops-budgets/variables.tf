@@ -1,10 +1,15 @@
 # ==============================================================================
-# MODULE: finops-budgets — variables
+# MODULE: finops-budgets - variables
 # ==============================================================================
 
 variable "billing_account" {
   description = "GCP billing account ID"
   type        = string
+
+  validation {
+    condition     = can(regex("^[A-F0-9]{6}-[A-F0-9]{6}-[A-F0-9]{6}$", var.billing_account))
+    error_message = "billing_account must match pattern XXXXXX-XXXXXX-XXXXXX."
+  }
 }
 
 variable "project_id" {
