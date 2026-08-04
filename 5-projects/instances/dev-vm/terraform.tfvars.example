@@ -1,0 +1,17 @@
+# ==============================================================================
+# EXAMPLE terraform.tfvars for 5-projects/instances/dev-vm
+# ==============================================================================
+# Copy to terraform.tfvars and replace placeholders with real values.
+# terraform.tfvars is gitignored - never commit real values.
+# ==============================================================================
+
+org_id          = "0000000000"            # Replace with your numeric org ID
+billing_account = "XXXXXX-XXXXXX-XXXXXX"  # Replace with your billing account ID
+project_prefix  = "foundation"
+region          = "us-east1"
+zone            = "us-east1-b"
+
+# Users who can SSH into the VM via IAP
+vm_operators = [
+  "your-email@example.com",
+]

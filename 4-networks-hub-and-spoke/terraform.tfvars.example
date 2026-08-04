@@ -1,0 +1,13 @@
+# ==============================================================================
+# EXAMPLE terraform.tfvars for 4-networks-hub-and-spoke
+# ==============================================================================
+# Copy to terraform.tfvars and replace placeholders with real values.
+# terraform.tfvars is gitignored - never commit real values.
+# ==============================================================================
+
+org_id             = "0000000000"            # Replace with your numeric org ID
+billing_account    = "XXXXXX-XXXXXX-XXXXXX"  # Replace with your billing account ID
+project_prefix     = "foundation"
+region             = "us-east1"
+connectivity_model = "peering"               # "peering" or "ncc"
+egress_model       = "distributed_nat"       # "distributed_nat" or "centralized_inspection"

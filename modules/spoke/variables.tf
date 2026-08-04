@@ -1,6 +1,11 @@
 variable "project_id" {
   description = "GCP project ID for the spoke VPC"
   type        = string
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]{4,28}[a-z0-9]$", var.project_id))
+    error_message = "project_id must be a valid GCP project ID (6-30 chars, lowercase letters, digits, hyphens)."
+  }
 }
 variable "region" {
   description = "GCP region"
@@ -13,6 +18,11 @@ variable "env_name" {
 variable "spoke_cidr" {
   description = "CIDR block for the spoke (e.g. 10.16.0.0/16)"
   type        = string
+
+  validation {
+    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.spoke_cidr))
+    error_message = "spoke_cidr must be a valid CIDR (e.g. 10.16.0.0/16)."
+  }
 }
 variable "vpc_name" {
   description = "Name for the spoke VPC"
@@ -25,6 +35,11 @@ variable "subnet_name" {
 variable "subnet_cidr" {
   description = "CIDR for the primary subnet"
   type        = string
+
+  validation {
+    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_cidr))
+    error_message = "subnet_cidr must be a valid CIDR (e.g. 10.16.0.0/22)."
+  }
 }
 variable "workload_type" {
   description = "Workload type: vm / gke / mixed"

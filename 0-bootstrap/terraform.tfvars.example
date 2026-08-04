@@ -1,0 +1,17 @@
+# ==============================================================================
+# EXAMPLE terraform.tfvars for 0-bootstrap
+# ==============================================================================
+# Copy to terraform.tfvars and replace placeholders with real values.
+# terraform.tfvars is gitignored - never commit real credentials.
+# ==============================================================================
+
+org_id            = "0000000000"            # Replace with your numeric org ID
+billing_account   = "XXXXXX-XXXXXX-XXXXXX"  # Replace with your billing account ID
+region            = "us-east1"              # Change if needed
+project_prefix    = "foundation"            # Prefix for all project names
+seed_project_name = "prj-bootstrap-seed"    # Seed project name
+
+# Human users who will run Terraform locally (impersonate the Terraform SA)
+terraform_operators = [
+  "your-email@example.com",
+]

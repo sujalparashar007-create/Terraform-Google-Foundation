@@ -1,0 +1,25 @@
+# ==============================================================================
+# EXAMPLE terraform.tfvars for 2-folders
+# ==============================================================================
+# Copy to terraform.tfvars and replace placeholders with real values.
+# terraform.tfvars is gitignored - never commit real values.
+# ==============================================================================
+
+org_id         = "0000000000"  # Replace with your numeric org ID
+project_prefix = "foundation"
+region         = "us-east1"
+
+# Folder-level IAM bindings - grant project creation rights per folder.
+# Uncomment and fill in your own principals:
+# folder_iam_bindings = {
+#   network_creator = {
+#     folder_key = "fldr-network"
+#     role       = "roles/resourcemanager.projectCreator"
+#     member     = "group:network-admins@example.com"
+#   }
+#   dev_creator = {
+#     folder_key = "fldr-development"
+#     role       = "roles/resourcemanager.projectCreator"
+#     member     = "group:dev-team@example.com"
+#   }
+# }

@@ -1,6 +1,11 @@
 variable "project_id" {
   description = "GCP project ID"
   type        = string
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]{4,28}[a-z0-9]$", var.project_id))
+    error_message = "project_id must be a valid GCP project ID (6-30 chars, lowercase letters, digits, hyphens)."
+  }
 }
 variable "vpc_self_link" {
   description = "Self-link of the VPC to apply rules to"

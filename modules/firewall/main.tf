@@ -1,4 +1,4 @@
-resource "google_compute_firewall" "rules" {
+resource "google_compute_firewall" "firewall_rules" {
   for_each    = var.rules
   project     = var.project_id
   name        = each.value.name

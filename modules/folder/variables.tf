@@ -5,6 +5,11 @@
 variable "parent" {
   description = "Parent resource in format 'organizations/ORG_ID' or 'folders/FOLDER_ID'"
   type        = string
+
+  validation {
+    condition     = can(regex("^(organizations|folders)/[0-9]+$", var.parent))
+    error_message = "parent must be in format 'organizations/NNN' or 'folders/NNN'."
+  }
 }
 
 variable "names" {

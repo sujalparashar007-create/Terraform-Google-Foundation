@@ -1,0 +1,26 @@
+# ==============================================================================
+# EXAMPLE terraform.tfvars for 1-org
+# ==============================================================================
+# Copy to terraform.tfvars and replace placeholders with real values.
+# terraform.tfvars is gitignored - never commit real values.
+# ==============================================================================
+
+org_id         = "0000000000"  # Replace with your numeric org ID
+project_prefix = "foundation"
+region         = "us-east1"
+
+# Org-level IAM bindings (role -> member)
+# org_iam_bindings = {
+#   org_admin = {
+#     role   = "roles/resourcemanager.organizationAdmin"
+#     member = "group:gcp-platform-admins@example.com"
+#   }
+# }
+
+# Firewall CIDR ranges (override defaults if needed)
+# corp_ssh_range      = "198.51.100.0/24"
+# vpn_ssh_range       = "198.51.101.0/24"
+# bastion_range       = "10.10.10.0/24"
+# vuln_scanner_range  = "10.20.0.0/24"
+# monitoring_range    = "10.30.0.0/24"
+# backup_range        = "10.40.0.0/24"
