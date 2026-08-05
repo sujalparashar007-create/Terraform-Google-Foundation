@@ -63,6 +63,15 @@ resource "google_secret_manager_secret_iam_member" "accessor" {
   member    = "serviceAccount:${local.service_account_email}"
 }
 
+# Grant Pub/Sub (via Eventarc) permission to invoke the Cloud Run service
+resource "google_cloud_run_service_iam_member" "pubsub_invoker" {
+  project  = var.project_id
+  location = var.region
+  service  = var.function_name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
 # ------------------------------------------------------------------------------
 # CLOUD FUNCTION
 # ------------------------------------------------------------------------------
