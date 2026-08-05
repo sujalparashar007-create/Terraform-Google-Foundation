@@ -74,9 +74,10 @@ module "finops_foundation" {
 # STEP 1.4: Org Policy — Hierarchical Firewall Rules (inherited by all projects)
 # ==============================================================================
 
-module "finops_org_policy" {
-  source = "../finops-org-policy"
+module "hierarchical_policy" {
+  source = "../hierarchical-policy"
 
+  scope  = "organization"
   org_id = var.org_id
 
   rules = {
