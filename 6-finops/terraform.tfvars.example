@@ -9,6 +9,7 @@
 project_id               = "your-project-id"
 billing_account_id       = "XXXXXX-XXXXXX-XXXXXX"
 billing_export_table_id  = "your-project.billing_export.gcp_billing_export_resource_v1_XXXXXX"
+org_id                   = "your-org-id"
 
 # --- OPTIONAL (defaults shown) ---
 region                   = "us-east1"

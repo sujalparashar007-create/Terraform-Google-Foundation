@@ -173,19 +173,19 @@ locals {
       EOT
     }
 
-  finops_budgets = {
-    friendly_name = "FinOps Budget Targets"
-    query         = <<-EOT
+    finops_budgets = {
+      friendly_name = "FinOps Budget Targets"
+      query         = <<-EOT
         SELECT month, project_id, currency, budget_amount
         FROM UNNEST([
         ${local.finops_budgets_rows}
         ])
       EOT
-  }
+    }
 
-  monthly_kpi_summary = {
-    friendly_name = "Monthly KPI Summary"
-    query         = <<-EOT
+    monthly_kpi_summary = {
+      friendly_name = "Monthly KPI Summary"
+      query         = <<-EOT
         WITH daily_cost AS (
           SELECT usage_date, project_id, project_name, net_cost, currency
           FROM `${var.project_id}.${var.dataset_id}.daily_cost`
@@ -217,8 +217,8 @@ locals {
          AND a.month = b.month
          AND a.currency = b.currency
       EOT
+    }
   }
-}
 }
 
 # ------------------------------------------------------------------------------

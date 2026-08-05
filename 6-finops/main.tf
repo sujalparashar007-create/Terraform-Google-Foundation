@@ -70,6 +70,60 @@ module "finops_foundation" {
   activate_apis = local.apis
   iam           = local.foundation_iam
 }
+# ==============================================================================
+# STEP 1.4: Org Policy — Hierarchical Firewall Rules (inherited by all projects)
+# ==============================================================================
+
+module "finops_org_policy" {
+  source = "../finops-org-policy"
+
+  org_id = var.org_id
+
+  rules = {
+    corp_ssh = {
+      priority    = 200
+      action      = "allow"
+      src_ranges  = ["198.51.100.0/24"]
+      ports       = ["22"]
+      description = "Allow enterprise SSH from corporate range"
+    }
+    vpn_ssh = {
+      priority    = 300
+      action      = "allow"
+      src_ranges  = ["198.51.101.0/24"]
+      ports       = ["22"]
+      description = "Allow enterprise SSH from VPN range"
+    }
+    bastion_ssh = {
+      priority    = 400
+      action      = "allow"
+      src_ranges  = ["10.10.10.0/24"]
+      ports       = ["22"]
+      description = "Allow enterprise SSH from bastion range"
+    }
+    vuln_scanner = {
+      priority    = 500
+      action      = "allow"
+      src_ranges  = ["10.20.0.0/24"]
+      ports       = ["443", "9100"]
+      description = "Allow vulnerability scanner"
+    }
+    monitoring = {
+      priority    = 600
+      action      = "allow"
+      src_ranges  = ["10.30.0.0/24"]
+      ports       = ["9090"]
+      description = "Allow monitoring collector"
+    }
+    backup = {
+      priority    = 700
+      action      = "allow"
+      src_ranges  = ["10.40.0.0/24"]
+      ports       = ["8443"]
+      description = "Allow backup service"
+    }
+  }
+}
 
 # ==============================================================================
 # STEP 1.5: Service Account act-as permissions (SA-level, stays inline)

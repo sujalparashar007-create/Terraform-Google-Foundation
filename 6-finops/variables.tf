@@ -30,6 +30,11 @@ variable "billing_account_id" {
   }
 }
 
+variable "org_id" {
+  description = "GCP Organization ID (numeric) — required for hierarchical firewall policy"
+  type        = string
+}
+
 variable "billing_export_table_id" {
   description = "Fully qualified BigQuery billing export table (project.dataset.table)"
   type        = string
