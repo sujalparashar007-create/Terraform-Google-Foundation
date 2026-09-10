@@ -24,10 +24,10 @@ resource "google_project" "seed" {
   billing_account     = var.billing_account
   auto_create_network = false
 
-  # Prevent accidental destruction
-  lifecycle {
-    prevent_destroy = true
-  }
+  # Prevent accidental destruction — comment out to allow destroy
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 # ------------------------------------------------------------------------------
@@ -166,13 +166,13 @@ resource "google_storage_bucket" "state_bucket" {
   location = var.region
 
   # Best practices for Terraform state storage
-  # Best practices for Terraform state storage
   versioning {
     enabled = true
   }
 
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
+  force_destroy               = true
 
   # Soft delete / retention
   soft_delete_policy {
